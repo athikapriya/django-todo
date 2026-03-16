@@ -1,0 +1,74 @@
+/* =============== xxl screen =============== */
+@media screen and (max-width: 1400px) {
+    
+}
+
+
+/* =============== xl screen =============== */
+@media screen and (max-width: 1200px) {
+    
+}
+
+
+/* =============== lg screen =============== */
+@media screen and (max-width: 992px) {
+    
+}
+
+
+/* =============== md screen =============== */
+@media screen and (max-width: 768px) {
+    
+}
+
+
+/* =============== sm screen =============== */
+@media screen and (max-width: 576px) {
+    .card {
+        padding: 15px;
+    }
+
+    .todo-header h3 {
+        font-size: 22px;
+    }
+
+    .subtitle {
+        font-size: 12px;
+    }
+
+    .search-input {
+        height: 34px;
+        font-size: 13px;
+    }
+
+    .btn {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+
+    .todo-table td {
+        padding: 8px 5px;
+        font-size: 12px;
+    }
+
+    .priority-badge {
+        padding: 3px 8px;
+        font-size: 10px;
+    }
+
+    .pagination-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+    }
+
+    .actions a {
+        font-size: 0.7rem;
+    }
+}
+
+
+/* =============== extra sm screen =============== */
+@media screen and (max-width: 400px) {
+    
+}
