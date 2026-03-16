@@ -1,0 +1,25 @@
+{% extends 'base/main.html' %}
+
+{% block css %}
+<style>
+    .card{
+        min-height: 100px;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card todo-card">
+    
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        <p>Are you sure to delete the task <strong>"{{todo}}"</strong> ?</p>
+
+        <a href="{% url 'homepage' %}" class="btn btn-warning btn-sm me-2">Cancel</a>
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+    </form>
+
+</div>
+{% endblock %}

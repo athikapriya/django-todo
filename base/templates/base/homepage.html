@@ -1,1 +1,233 @@
-<h1>Todo App</h1>
+{% extends 'base/main.html' %}
+{% block content %}
+
+<div class="card todo-card">
+
+    <!-- =============== header =============== -->
+
+    <div class="todo-header text-center mb-4">
+        <h3 class="heading-font">My Todos</h3>
+        <p class="subtitle">Stay organized and productive</p>
+    </div>
+
+
+    <!-- =============== search and add task =============== -->
+
+    <div class="d-flex gap-2 mb-4">
+
+        <form method="GET" class="flex-grow-1 position-relative" id="searchForm">
+            <span class="search-icon" style="font-size: 0.7rem;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input type="text" 
+                name="search" 
+                placeholder="Search your task..." 
+                value="{{ q }}" 
+                class="form-control custom-input search-input"
+                id="searchInput">
+        </form>
+
+        <a href="{% url 'create_task' %}" 
+        class="btn btn-success btn-sm d-flex align-items-center" 
+        aria-label="Add Task">
+            <i class="fa-solid fa-plus"></i>
+        </a>
+
+    </div>
+
+    <!-- =============== ACTIVE TASKS =============== -->
+
+    <h6 class="tasks-title">All</h6>
+
+    <div class="table-responsive">
+        <table class="todo-table">
+
+            {% for todo in active_tasks %}
+
+            <tr>
+
+                <td>
+                    <form action="{% url 'toggle_complete' todo.id %}" method="POST" class="d-flex align-items-center">
+                        {% csrf_token %}
+
+                        <input type="checkbox"
+                            onchange="this.form.submit()">
+
+                        <span class="task-title">{{ todo.title }}</span>
+                    </form>
+                </td>
+
+                <td>{{ todo.deadline|date:"M d, Y" }}</td>
+
+                <td class="text-center">
+                    {% if todo.priority == "high" %}
+                        <span class="priority-badge high">High</span>
+                    {% elif todo.priority == "medium" %}
+                        <span class="priority-badge medium">Medium</span>
+                    {% else %}
+                        <span class="priority-badge low">Low</span>
+                    {% endif %}
+                </td>
+
+                <td class="actions d-flex align-items-center justify-content-between">
+
+                    <a href="{% url 'update_task' todo.id %}" aria-label="Edit" class="text-decoration-none">
+                        <i class="fa-solid fa-pen"></i>
+                    </a>
+
+                    <a href="{% url 'delete_task' todo.id %}" aria-label="Delete">
+                        <i class="fa-solid fa-trash"></i>
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr>
+                <td class="text-center opacity-75">
+                    No active tasks yet!
+                </td>
+            </tr>
+
+            {% endfor %}
+
+        </table>
+    </div>
+
+
+    <!-- ACTIVE PAGINATION -->
+
+    {% if active_tasks.paginator.num_pages > 1 %}
+
+    <div class="pagination-container mt-3">
+
+        {% if active_tasks.has_previous %}
+            <a href="?page_active={{ active_tasks.previous_page_number }}&search={{ q }}" class="pagination-btn" aria-label="paginator left">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+        {% endif %}
+
+        {% for num in active_tasks.paginator.page_range %}
+            {% if active_tasks.number == num %}
+                <span class="pagination-btn active">{{ num }}</span>
+            {% else %}
+                <a href="?page_active={{ num }}&search={{ q }}" class="pagination-btn">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if active_tasks.has_next %}
+            <a href="?page_active={{ active_tasks.next_page_number }}&search={{ q }}" class="pagination-btn" aria-label="paginator right">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+        {% endif %}
+
+    </div>
+
+    {% endif %}
+
+
+
+    <!-- =============== COMPLETED TASKS =============== -->
+
+    <div class="completed-section mt-4">
+
+        <h6 class="tasks-title">Completed</h6>
+
+        <div class="table-responsive">
+            <table class="todo-table completed">
+
+                {% for todo in completed_tasks %}
+
+                <tr class="completed-task">
+
+                    <td>
+                        <form action="{% url 'toggle_complete' todo.id %}" method="POST" class="d-flex align-items-center">
+                            {% csrf_token %}
+
+                            <input type="checkbox"
+                                checked
+                                onchange="this.form.submit()">
+
+                            <span class="task-title completed-text">
+                                {{ todo.title }}
+                            </span>
+                        </form>
+                    </td>
+
+                    <td>{{ todo.deadline|date:"M d, Y" }}</td>
+
+                    <td class="text-center">
+                        {% if todo.priority == "high" %}
+                            <span class="priority-badge high">High</span>
+                        {% elif todo.priority == "medium" %}
+                            <span class="priority-badge medium">Medium</span>
+                        {% else %}
+                            <span class="priority-badge low">Low</span>
+                        {% endif %}
+                    </td>
+
+                    <td class="actions d-flex align-items-center justify-content-between">
+
+                        <a href="{% url 'update_task' todo.id %}" aria-label="Edit">
+                            <i class="fa-solid fa-pen"></i>
+                        </a>
+
+                        <a href="{% url 'delete_task' todo.id %}" aria-label="Delete">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td  class="text-center opacity-75">
+                        No completed tasks
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </table>
+        </div>
+
+
+        <!-- COMPLETED PAGINATION -->
+
+        {% if completed_tasks.paginator.num_pages > 1 %}
+
+        <div class="pagination-container mt-3">
+
+            {% if completed_tasks.has_previous %}
+            <a href="?page_completed={{ completed_tasks.previous_page_number }}&search={{ q }}" class="pagination-btn" aria-label="paginato left">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+            {% endif %}
+
+            {% for num in completed_tasks.paginator.page_range %}
+                {% if completed_tasks.number == num %}
+                    <span class="pagination-btn active">{{ num }}</span>
+                {% else %}
+                    <a href="?page_completed={{ num }}&search={{ q }}" class="pagination-btn">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if completed_tasks.has_next %}
+            <a href="?page_completed={{ completed_tasks.next_page_number }}&search={{ q }}" class="pagination-btn" aria-label="paginator right">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

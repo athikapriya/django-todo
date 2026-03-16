@@ -1,0 +1,78 @@
+{% extends 'base/main.html' %}
+
+{% block css %}
+<style>
+    .card{
+        min-height: 500px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="card todo-card">
+
+    <!-- =============== header =============== -->
+
+    <div class="todo-header text-center mb-4">
+
+        {% if page == "create-task" %}
+            <h4 class="heading-font">Add Task</h4>
+        {% else %}
+            <h4 class="heading-font">Update Task</h4>
+        {% endif %}
+
+        <p class="subtitle">Stay organized and productive</p>
+    </div>
+
+
+    <!-- =============== add task body =============== -->
+    <div class="task-body">
+        <form action="" method="POST">
+            {% csrf_token %}
+            
+            <!-- =============== title =============== -->
+            <div class="mb-3">
+                {{form.title.label_tag}}
+                {{form.title}}
+            </div>
+
+            <!-- =============== priority and deadline =============== -->
+            <div class="row">
+                <!-- =============== priority =============== -->
+                <div class="col-md-6 mb-3">
+                    {{ form.priority.label_tag }}
+                    <div class="select-wrapper">
+                        {{ form.priority }}
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    {{form.deadline.label_tag}}
+                    {{form.deadline}}
+                </div>
+            </div>
+
+            <!-- =============== description =============== -->
+            <div class="mb-3">
+                {{form.description.label_tag}}
+                {{form.description}}
+                <small class="form-text text-light opacity-75">
+                    Maximum 300 words
+                </small>
+            </div>
+
+            <!-- =============== add task btn =============== -->
+            <button type="submit" class="btn btn-success w-100">
+                {% if page == "create-task" %}
+                    Add Task
+                {% else %}
+                    Update Task 
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}
